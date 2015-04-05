@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <link type="text/js" rel="stylesheet" href="estilo.css"/>
+  <script src="inputreal.json"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.11.2.min.js"></script>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <meta charset="utf-8">
+
+  <style>
+      html, body, #map-canvas {
+        height: 100%;
+        width: 80%;
+        margin: 0px auto;
+        padding: 0px;
+      }
+  </style>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+  <script>
+  var map;
+  function initialize() {
+  var mapOptions = {
+    zoom: 3,
+    center: new google.maps.LatLng(40, -80)
+  	};
+  	map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+  	
+
+  	}
+  	
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+    <script> 
+       
+        function Agregar_Markers(){	  
+        initialize() /*Para eliminar markers antiguos*/   	
+    	var x;
+    	var usuario;
+    	x=document.getElementById("forma1");
+    	a=x.elements[0].value
+    	;
+    	var fecha1=x.elements[2].value;
+      	var fecha2=x.elements[3].value;
+      	var año_desde=parseInt(fecha1.split("-")[0]);
+      	var mes_desde=parseInt(fecha1.split("-")[1]);
+      	var dia_desde=parseInt(fecha1.split("-")[2]);
+      	var año_hasta=parseInt(fecha2.split("-")[0]);
+      	var mes_hasta=parseInt(fecha2.split("-")[1]);
+      	var dia_hasta=parseInt(fecha2.split("-")[2]);
+      	
+    	var i=0;
+    	
+    	while (i<(info.usuarios[a].checkins.length)){
+    	var	fecha=info.usuarios[a].checkins[i].time.split(" ")[0];
+    	var año=parseInt(fecha.split("-")[0]);
+       	var mes=parseInt(fecha.split("-")[1]);
+       	var dia=parseInt(fecha.split("-")[2]);
+       	var b=0;
+       	if (año>año_desde && año<año_hasta){
+       		b=1
+           	}
+       	else{
+       		if (año==año_desde|| año==año_hasta){
+       			if (mes<mes_hasta && mes>mes_desde){
+       				b=1
+       			}
+       			else{
+       				if (mes==mes_desde||mes==mes_hasta)
+       				{
+       					if (dia<=dia_hasta&&dia>=dia_desde){
+       						b=1
+       					}
+       				}
+       			}
+
+       		}
+       	}	
+
+
+    	if (b==1){    
+       	var Pos = new google.maps.LatLng(info.usuarios[a].checkins[i].latitude,info.usuarios[a].checkins[i].longitude);
+      	var Marker = new google.maps.Marker({
+      	position: Pos,
+      	map: map,
+      	title:"Some title" 
+      	});
+
+      	Marker.setMap(map);
+
+
+      	
+     
+      	
+      	}
+      	i++
+      	}
+      	
+      	y=x.elements[1].value;
+      	
+      	c_amigos=info.usuarios[a].amigos.length
+
+      	var j=0;
+      	var k=0;
+
+        if ($('#box').is(':checked') ){
+
+      		
+      	
+
+      	while (j<c_amigos){
+      			while (k<info.usuarios[a].amigos[j].checkins.length){
+      			    	var	fecha=info.usuarios[a].amigos[j].checkins[k].time.split(" ")[0];
+    					var año=parseInt(fecha.split("-")[0]);
+       					var mes=parseInt(fecha.split("-")[1]);
+   				    	var dia=parseInt(fecha.split("-")[2]);
+ 				      	var c=0;
+       					if (año>año_desde && año<año_hasta){
+       						c=1
+       					}
+       					else{
+       						if (año==año_desde|| año==año_hasta){
+       							if (mes<mes_hasta && mes>mes_desde){
+       							c=1
+       						}
+       						else{
+       							if (mes==mes_desde||mes==mes_hasta){
+       								if (dia<=dia_hasta&&dia>=dia_desde){
+       									c=1
+       								}
+     		  					}
+       						}
+       						}
+       					}
+
+       					if (c=1){
+      		    		var Pos = new google.maps.LatLng(info.usuarios[a].amigos[j].checkins[k].latitude,info.usuarios[a].amigos[j].checkins[k].longitude);
+      					var Marker = new google.maps.Marker({
+      					position: Pos,
+      					map: map,
+      					title:"Some title" 
+      					});
+      					Marker.setMap(map);
+      					k++}}
+
+
+      
+      			j++
+      			}}  
+      		
+		
+		}      
+      </script>
+      	
+    	
+
+
+         
+  </head>
+  <body>
+  	<script> 
+  	var a;
+  	var lista_usuarios=[];
+  	a=info.usuarios.length;
+  	var i=0;
+  	while (i<a){
+  		lista_usuarios[i]=info.usuarios[i].ide;
+  		i++;
+  	}  	
+  	</script>
+    <div id="pestana1">
+    <a  href="pestana1.html">Informacion General</a>
+    </div>
+    <div id="pestana2">
+    <a  href="pestana2.html">Datos Usuarios</a>
+    </div>
+
+    
+    <h3 id="titulo"> Buscar Usuario</h3>
+    
+    <form id="forma1">
+    <div class="a">
+    ID del usuario: 
+    <select id="usuario" name="Usuario">
+    <option value="0">6125</option>
+    <option value="1">8886</option>
+    <option value="2">4354</option>
+    </select>  
+    <br>
+    <input type="checkbox" name="amigos" id="box" value="amigo"> Mostrar Amigos <br> 
+   	<br>
+   	</div>
+   	<div class="a">
+   	Filtrar por Fecha*
+   	<br>
+   	Entre
+   	<br>
+   	
+   	
+    <input type="date" name="fecha1">
+    <br>y<br>
+    <input type="date" name="fecha2"><br>
+    *Campo obligatorio
+    </div>
+     
+    </form>
+    <div class="b">
+    <button onclick="Agregar_Markers()">                            Buscar</button></div>
+    
+    
+    
+           
+    <div id="map-canvas"></div>
+  
+
+    
+  </body>
+  </html>
